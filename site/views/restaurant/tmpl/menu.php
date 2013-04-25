@@ -6,23 +6,23 @@
     <h2><?php echo $this->restaurant->name; ?></h2>
     <h2><?php echo $this->restaurant->info_object; ?></h2>
     <?php
-//    $val = "Inside Restaurant Menu Tmpl -- This";               //### DEBUG
-//    $obj = $this;              //### DEBUG
-//    file_put_contents("/home/txdevnet/jmlog_pmenu", PHP_EOL . "--" . PHP_EOL . time() . PHP_EOL . $val . PHP_EOL . "~~" . PHP_EOL . var_export($obj, true), FILE_APPEND);  //### DEBUG
-//
-//    for ($i = 0, $n = count($this->restaurant->menus); $i < $n; $i++)
-//    {
-//
-//        //check the type of item here, and append it to the parent item if necessary
-//        //then render the items as a unit in sorted order
-//        
-//        $val = "Inside Restaurant Menu Tmpl -- A Menu, a _menuView: ";               //### DEBUG
-//        $obj = array($this->restaurant->menus[$i], $this->_menuView);              //### DEBUG
-//        file_put_contents("/home/txdevnet/jmlog_pmenu", PHP_EOL . "--" . PHP_EOL . time() . PHP_EOL . $val . PHP_EOL . "~~" . PHP_EOL . var_export($obj, true), FILE_APPEND);  //### DEBUG
-//
-//        $this->_menuView->menu = $this->restaurant->menus[$i];
-//        echo $this->_menuView->render();
-//    }
+    $val = "Inside Restaurant Menu Tmpl -- This";               //### DEBUG
+    $obj = $this;              //### DEBUG
+    file_put_contents("/home/txdevnet/jmlog_pmenu", PHP_EOL . "--" . PHP_EOL . time() . PHP_EOL . $val . PHP_EOL . "~~" . PHP_EOL . var_export($obj, true), FILE_APPEND);  //### DEBUG
+
+    for ($i = 0, $n = count($this->restaurant->menus); $i < $n; $i++)
+    {
+
+        //check the type of item here, and append it to the parent item if necessary
+        //then render the items as a unit in sorted order
+        
+        $val = "Inside Restaurant Menu Tmpl -- A Menu, a _menuView: ";               //### DEBUG
+        $obj = array($this->restaurant->menus[$i], $this->_menuView);              //### DEBUG
+        file_put_contents("/home/txdevnet/jmlog_pmenu", PHP_EOL . "--" . PHP_EOL . time() . PHP_EOL . $val . PHP_EOL . "~~" . PHP_EOL . var_export($obj, true), FILE_APPEND);  //### DEBUG
+
+        $this->_menuView->menu = $this->restaurant->menus[$i];
+        echo $this->_menuView->render();
+    }
     ?>
 </div>
 <!--
