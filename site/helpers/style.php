@@ -16,8 +16,8 @@ class PMenuHelpersStyle
             
 		//javascripts
                 //JHtml::_('jquery.ui');
-		$document->addScript(JURI::base().'components/com_pmenu/assets/js/jquery-1.4.1.min.js', 'text/javascript', false);
-                $document->addScript(JURI::base().'components/com_pmenu/assets/js/jquery.sheepItPlugin.js', 'text/javascript', false);
+		//$document->addScript(JURI::base().'components/com_pmenu/assets/js/jquery-1.4.1.min.js', 'text/javascript', false);
+                //$document->addScript(JURI::base().'components/com_pmenu/assets/js/jquery.sheepItPlugin.js', 'text/javascript', false);
                 $document->addScript(JURI::base().'components/com_pmenu/assets/js/pmenu.js', 'text/javascript', false);
 		
 
