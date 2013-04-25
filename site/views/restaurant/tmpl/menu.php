@@ -1,6 +1,6 @@
 
  
-
+<h1><a href="https://github.com/ArtRichards/com_prettymenu">com_prettymenu can be found at https://github.com/ArtRichards/com_prettymenu</a></h1>
 <h2 class="page-header"><?php echo JText::_('COM_PMENU_MENUS'); ?></h2>
 <div class="row-fluid">
     <h2><?php echo $this->restaurant->name; ?></h2>
