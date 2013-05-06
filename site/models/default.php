@@ -100,6 +100,7 @@ class PMenuModelsDefault extends JModelBase {
 
         $list = $this->_getList($query, $this->limitstart, $this->limit);
 
+
         return $list;
     }
 

@@ -1,6 +1,6 @@
 <?php defined( '_JEXEC' ) or die( 'Restricted access' ); 
  
-class TableReview extends JTable
+class TableItem extends JTable
 {                      
   /**
   * Constructor
@@ -8,6 +8,6 @@ class TableReview extends JTable
   * @param object Database connector object
   */
   function __construct( &$db ) {
-    parent::__construct('#__pmenu_favorites', 'favorite_id', $db);
+    parent::__construct('#__pmenu_items', 'item_id', $db);
   }
 }

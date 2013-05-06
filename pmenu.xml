@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="0.0.1" method="upgrade">
+<extension type="component" version="0.0.2" method="upgrade">
 	<name>COM_PMENU</name>
 	<creationDate>2013-04-02</creationDate>
 	<author>ArtRichards</author>
@@ -7,7 +7,7 @@
 	<authorUrl>http://TxDev.net</authorUrl>
 	<copyright>Copyright Info</copyright>
 	<license>License Info</license>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<description>COM_PMENU_DESCRIPTION</description>
 
 	<install>
@@ -37,16 +37,18 @@
 	<administration>
 		<menu link="option=com_pmenu" img="components/com_pmenu/assets/images/pmenu_icon.png">COM_PMENU</menu>
 		<submenu>
-			<menu view="settings" img="components/com_pmenu/assets/images/settings_icon.png" 
-				alt="PMENU/Settings">COM_PMENU_SETTINGS</menu>
+			<menu view="statistics" img="components/com_pmenu/assets/images/settings_icon.png" 
+				alt="PMENU/Statistics">COM_PMENU_STATISTICS</menu>
 		</submenu>
 
 		<files folder="admin">
-			<!--<folder>controllers</folder>-->
+			<folder>controllers</folder>
 			<folder>languages</folder>
-			<!--<folder>models</folder>-->
-			<!--<folder>views</folder>-->
+			<folder>helpers</folder>
+			<folder>models</folder>
+			<folder>views</folder>
 			<filename>pmenu.php</filename>
+			<filename>index.html</filename>
 			<filename>install.mysql.sql</filename>
 		</files>  
 
