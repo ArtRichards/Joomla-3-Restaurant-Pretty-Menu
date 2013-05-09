@@ -10,6 +10,17 @@ class PMenuControllersDefault extends JControllerBase
     // Get the application
     $app = $this->getApplication();
  
+    // ### SECURITY CHECK
+    $params = JComponentHelper::getParams('com_prettymenu');
+    if ($params->get('required_account') == 1) 
+    {
+        $user = JFactory::getUser();
+        if ($user->get('guest'))
+        {
+            $app->redirect('index.php',JText::_('COM_LENDR_ACCOUNT_REQUIRED_MSG'));
+        }
+    }
+    
     // Get the document object.
     $document     = JFactory::getDocument();
  

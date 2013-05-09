@@ -119,5 +119,6 @@ class CategoriesControllerCategories extends JControllerAdmin
 		}
 		// Close the application
 		JFactory::getApplication()->close();
+
 	}
 }

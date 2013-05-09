@@ -222,6 +222,7 @@ class CategoriesModelCategory extends JModelAdmin
 		$jinput = JFactory::getApplication()->input;
 
 		// A workaround to get the extension into the model for save requests.
+                // should we use $input here?
 		if (empty($extension) && isset($data['extension']))
 		{
 			$extension = $data['extension'];

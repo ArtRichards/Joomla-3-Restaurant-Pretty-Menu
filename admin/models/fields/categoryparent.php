@@ -27,9 +27,10 @@ class JFormFieldCategoryParent extends JFormFieldList
 	 * @since   1.6
 	 */
 	protected $type = 'CategoryParent';
-
+//Get the list of objects which we can become subobjects of
 	/**
 	 * Method to get the field options.
+                //Get the list of objects which we can become subobjects of
 	 *
 	 * @return  array  The field option objects.
 	 * @since   1.6
@@ -55,6 +56,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 			$oldCat = $this->form->getValue($name);
 		}
 
+                
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.level')
