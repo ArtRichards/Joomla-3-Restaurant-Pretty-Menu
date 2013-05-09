@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * Categories Component Categories Model
+ * PMenu Component PMenu Model
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesModelCategories extends JModelList
+class PMenuModelMenus extends JModelList
 {
 	/**
 	 * Constructor.
@@ -66,7 +66,7 @@ class CategoriesModelCategories extends JModelList
 		$app = JFactory::getApplication();
 		$context = $this->context;
 
-		$extension = $app->getUserStateFromRequest('com_categories.categories.filter.extension', 'extension', 'com_content', 'cmd');
+		$extension = $app->getUserStateFromRequest('com_pmenu.menus.filter.extension', 'extension', 'com_content', 'cmd');
 
 		$this->setState('filter.extension', $extension);
 		$parts = explode('.', $extension);
@@ -145,7 +145,7 @@ class CategoriesModelCategories extends JModelList
 					', a.language'
 			)
 		);
-		$query->from('#__categories AS a');
+		$query->from('#__pmenu_menus AS a');
 
 		// Join over the language
 		$query->select('l.title AS language_title')
@@ -168,7 +168,7 @@ class CategoriesModelCategories extends JModelList
 		if ($assoc)
 		{
 			$query->select('COUNT(asso2.id)>1 as association')
-				->join('LEFT', '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_categories.item'))
+				->join('LEFT', '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_pmenu.item'))
 				->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
 				->group('a.id');
 		}
@@ -243,7 +243,7 @@ class CategoriesModelCategories extends JModelList
 				->join(
 					'LEFT', $db->quoteName('#__contentitem_tag_map', 'tagmap')
 					. ' ON ' . $db->quoteName('tagmap.content_item_id') . ' = ' . $db->quoteName('a.id')
-					. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote($extension . '.category')
+					. ' AND ' . $db->quoteName('tagmap.type_alias') . ' = ' . $db->quote($extension . '.menu')
 				);
 		}
 
@@ -297,7 +297,7 @@ class CategoriesModelCategories extends JModelList
 			$hname = $cname . 'HelperAssociation';
 			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
 
-			$assoc = class_exists($hname) && !empty($hname::$category_association);
+			$assoc = class_exists($hname) && !empty($hname::$menu_association);
 		}
 
 		return $assoc;

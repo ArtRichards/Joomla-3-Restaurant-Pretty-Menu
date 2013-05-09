@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,16 +10,16 @@
 defined('_JEXEC') or die;
 
 /**
- * Categories view class for the Category package.
+ * PMenu view class for the Menu package.
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesController extends JControllerLegacy
+class PMenuController extends JControllerLegacy
 {
 	/**
-	 * @var		string	The extension for which the categories apply.
+	 * @var		string	The extension for which the menus apply.
 	 * @since   1.6
 	 */
 	protected $extension;
@@ -57,18 +57,18 @@ class CategoriesController extends JControllerLegacy
 		$document = JFactory::getDocument();
 
 		// Set the default view name and format from the Request.
-		$vName   = $this->input->get('view', 'categories');
+		$vName   = $this->input->get('view', 'menus');
 		$vFormat = $document->getType();
 		$lName   = $this->input->get('layout', 'default');
 		$id      = $this->input->getInt('id');
 
 		// Check for edit form.
-		if ($vName == 'category' && $lName == 'edit' && !$this->checkEditId('com_categories.edit.category', $id))
+		if ($vName == 'menu' && $lName == 'edit' && !$this->checkEditId('com_pmenu.edit.menu', $id))
 		{
 			// Somehow the person just went to the form - we don't allow that.
 			$this->setError(JText::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id));
 			$this->setMessage($this->getError(), 'error');
-			$this->setRedirect(JRoute::_('index.php?option=com_categories&view=categories&extension='.$this->extension, false));
+			$this->setRedirect(JRoute::_('index.php?option=com_pmenu&view=menus&extension='.$this->extension, false));
 
 			return false;
 		}
@@ -77,7 +77,7 @@ class CategoriesController extends JControllerLegacy
 		if ($view = $this->getView($vName, $vFormat))
 		{
 			// Get the model for the view.
-			$model = $this->getModel($vName, 'CategoriesModel', array('name' => $vName . '.' . substr($this->extension, 4)));
+			$model = $this->getModel($vName, 'PMenuModel', array('name' => $vName . '.' . substr($this->extension, 4)));
 
 			// Push the model into the view (as default).
 			$view->setModel($model, true);
@@ -87,9 +87,9 @@ class CategoriesController extends JControllerLegacy
 			$view->document = $document;
 
 			// Load the submenu.
-			require_once JPATH_COMPONENT.'/helpers/categories.php';
+			require_once JPATH_COMPONENT.'/helpers/menus.php';
 
-			CategoriesHelper::addSubmenu($model->getState('filter.extension'));
+			PMenuHelper::addSubmenu($model->getState('filter.extension'));
 			$view->display();
 		}
 

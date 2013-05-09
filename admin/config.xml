@@ -14,8 +14,8 @@
 			<option value="0">JNO</option>
 			<option value="1">JYES</option>
 		</field>
-<!--
-		<field name="new_reviews" type="radio"
+
+<!--		<field name="new_reviews" type="radio"
 			default="1"
 			class="btn-group"
 			label="COM_PMENU_ALLOW_NEW_REVIEWS"

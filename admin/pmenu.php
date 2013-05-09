@@ -1,34 +1,25 @@
-<?php // No direct access
+<?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_pmenu
+ *
+ * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
 
-defined( '_JEXEC' ) or die( 'Restricted access' );
+defined('_JEXEC') or die;
 
-//load classes
-JLoader::registerPrefix('PMenu', JPATH_COMPONENT_ADMINISTRATOR);
+$input = JFactory::getApplication()->input;
 
-//Load plugins
-JPluginHelper::importPlugin('pmenu');
- 
-//application
-$app = JFactory::getApplication();
+if (!JFactory::getUser()->authorise('core.manage', $input->get('extension')))
+{
+	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+}
 
+JLoader::register('JHtmlPMenuAdministrator', JPATH_ADMINISTRATOR . '/components/com_pmenu/helpers/html/menusadministrator.php');
 
-//# from categories.php
-                //$input = $app->input; 
-                //if (!JFactory::getUser()->authorise('core.manage', $input->get('extension')))
-                //{
-                //	return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
-                //}
-                //
-                //# Helper
-                //JLoader::register('JHtmlCategoriesAdministrator', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/html/categoriesadministrator.php');
+$task = $input->get('task');
 
-
-// Require specific controller if requested
-$controller = $app->input->get('controller','display');
-
-// Create the controller
-$classname  = 'PMenuControllers'.ucwords($controller);
-$controller = new $classname();
- 
-// Perform the Request task
-$controller->execute();
+$controller	= JControllerLegacy::getInstance('PMenu');
+$controller->execute($input->get('task'));
+$controller->redirect();

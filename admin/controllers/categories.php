@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * The Categories List Controller
+ * The PMenu List Controller
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesControllerCategories extends JControllerAdmin
+class PMenuControllerPMenu extends JControllerAdmin
 {
 	/**
 	 * Proxy for getModel
@@ -27,7 +27,7 @@ class CategoriesControllerCategories extends JControllerAdmin
 	 * @return  object  The model.
 	 * @since   1.6
 	 */
-	public function getModel($name = 'Category', $prefix = 'CategoriesModel', $config = array('ignore_request' => true))
+	public function getModel($name = 'Menu', $prefix = 'PMenuModel', $config = array('ignore_request' => true))
 	{
 		$model = parent::getModel($name, $prefix, $config);
 		return $model;
@@ -44,26 +44,26 @@ class CategoriesControllerCategories extends JControllerAdmin
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		$extension = $this->input->get('extension');
-		$this->setRedirect(JRoute::_('index.php?option=com_categories&view=categories&extension=' . $extension, false));
+		$this->setRedirect(JRoute::_('index.php?option=com_pmenu&view=menus&extension=' . $extension, false));
 
 		$model = $this->getModel();
 
 		if ($model->rebuild())
 		{
 			// Rebuild succeeded.
-			$this->setMessage(JText::_('COM_CATEGORIES_REBUILD_SUCCESS'));
+			$this->setMessage(JText::_('COM_PMENU_REBUILD_SUCCESS'));
 			return true;
 		}
 		else
 		{
 			// Rebuild failed.
-			$this->setMessage(JText::_('COM_CATEGORIES_REBUILD_FAILURE'));
+			$this->setMessage(JText::_('COM_PMENU_REBUILD_FAILURE'));
 			return false;
 		}
 	}
 
 	/**
-	 * Save the manual order inputs from the categories list page.
+	 * Save the manual order inputs from the menus list page.
 	 *
 	 * @return  void
 	 * @since   1.6

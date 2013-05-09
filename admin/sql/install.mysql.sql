@@ -49,8 +49,6 @@ CREATE TABLE IF NOT EXISTS `#__pmenu_menus` (
   KEY `idx_alias` (`alias`),
   KEY `idx_language` (`language`)
 );
-INSERT INTO `bbqqt_categories` (`id`, `asset_id`, `parent_id`, `lft`, `rgt`, `level`, `path`, `extension`, `title`, `alias`, `note`, `description`, `published`, `checked_out`, `checked_out_time`, `access`, `params`, `metadesc`, `metakey`, `metadata`, `created_user_id`, `created_time`, `modified_user_id`, `modified_time`, `hits`, `language`, `version`) VALUES
-(1, 0, 0, 0, 0, 0, '', 'system', 'ROOT', 'root', '', '', 1, 0, '0000-00-00 00:00:00', 1, '{}', '', '', '', 931, '2011-01-01 00:00:01', 0, '0000-00-00 00:00:00', 0, '*', 1);
 
 CREATE TABLE IF NOT EXISTS `#__pmenu_items` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,

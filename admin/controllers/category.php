@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,16 +10,16 @@
 defined('_JEXEC') or die;
 
 /**
- * The Category Controller
+ * The Menu Controller
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesControllerCategory extends JControllerForm
+class PMenuControllerMenu extends JControllerForm
 {
 	/**
-	 * The extension for which the categories apply.
+	 * The extension for which the menus apply.
 	 *
 	 * @var    string
 	 * @since  1.6
@@ -57,7 +57,7 @@ class CategoriesControllerCategory extends JControllerForm
 	protected function allowAdd($data = array())
 	{
 		$user = JFactory::getUser();
-		return ($user->authorise('core.create', $this->extension) || count($user->getAuthorisedCategories($this->extension, 'core.create')));
+		return ($user->authorise('core.create', $this->extension) || count($user->getAuthorisedPMenu($this->extension, 'core.create')));
 	}
 
 	/**
@@ -83,14 +83,14 @@ class CategoriesControllerCategory extends JControllerForm
 		}
 
 		// Check specific edit permission.
-		if ($user->authorise('core.edit', $this->extension . '.category.' . $recordId))
+		if ($user->authorise('core.edit', $this->extension . '.menu.' . $recordId))
 		{
 			return true;
 		}
 
 		// Fallback on edit.own.
 		// First test if the permission is available.
-		if ($user->authorise('core.edit.own', $this->extension . '.category.' . $recordId) || $user->authorise('core.edit.own', $this->extension))
+		if ($user->authorise('core.edit.own', $this->extension . '.menu.' . $recordId) || $user->authorise('core.edit.own', $this->extension))
 		{
 			// Now test the owner is the user.
 			$ownerId = (int) isset($data['created_user_id']) ? $data['created_user_id'] : 0;
@@ -130,10 +130,10 @@ class CategoriesControllerCategory extends JControllerForm
 		JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Set the model
-		$model = $this->getModel('Category');
+		$model = $this->getModel('Menu');
 
 		// Preset the redirect
-		$this->setRedirect('index.php?option=com_categories&view=categories&extension=' . $this->extension);
+		$this->setRedirect('index.php?option=com_pmenu&view=menus&extension=' . $this->extension);
 
 		return parent::batch($model);
 	}

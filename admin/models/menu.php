@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,19 +10,19 @@
 defined('_JEXEC') or die;
 
 /**
- * Categories Component Category Model
+ * PMenu Component Menu Model
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesModelCategory extends JModelAdmin
+class PMenuModelMenu extends JModelAdmin
 {
 	/**
 	 * @var    string  The prefix to use with controller messages.
 	 * @since  1.6
 	 */
-	protected $text_prefix = 'COM_CATEGORIES';
+	protected $text_prefix = 'COM_PMENU';
 
 	/**
 	 * Method to test whether a record can be deleted.
@@ -43,7 +43,7 @@ class CategoriesModelCategory extends JModelAdmin
 			}
 			$user = JFactory::getUser();
 
-			return $user->authorise('core.delete', $record->extension . '.category.' . (int) $record->id);
+			return $user->authorise('core.delete', $record->extension . '.menu.' . (int) $record->id);
 		}
 	}
 
@@ -60,17 +60,17 @@ class CategoriesModelCategory extends JModelAdmin
 	{
 		$user = JFactory::getUser();
 
-		// Check for existing category.
+		// Check for existing menu.
 		if (!empty($record->id))
 		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->id);
+			return $user->authorise('core.edit.state', $record->extension . '.menu.' . (int) $record->id);
 		}
-		// New category, so check against the parent.
+		// New menu, so check against the parent.
 		elseif (!empty($record->parent_id))
 		{
-			return $user->authorise('core.edit.state', $record->extension . '.category.' . (int) $record->parent_id);
+			return $user->authorise('core.edit.state', $record->extension . '.menu.' . (int) $record->parent_id);
 		}
-		// Default to component settings if neither category nor parent known.
+		// Default to component settings if neither menu nor parent known.
 		else
 		{
 			return $user->authorise('core.edit.state', $record->extension);
@@ -88,7 +88,7 @@ class CategoriesModelCategory extends JModelAdmin
 	 *
 	 * @since   1.6
 	 */
-	public function getTable($type = 'Category', $prefix = 'CategoriesTable', $config = array())
+	public function getTable($type = 'Menu', $prefix = 'PMenuTable', $config = array())
 	{
 		return JTable::getInstance($type, $prefix, $config);
 	}
@@ -107,33 +107,33 @@ class CategoriesModelCategory extends JModelAdmin
 		$app = JFactory::getApplication('administrator');
 
 		$parentId = $app->input->getInt('parent_id');
-		$this->setState('category.parent_id', $parentId);
+		$this->setState('menu.parent_id', $parentId);
 
 		// Load the User state.
 		$pk = $app->input->getInt('id');
 		$this->setState($this->getName() . '.id', $pk);
 
 		$extension = $app->input->get('extension', 'com_content');
-		$this->setState('category.extension', $extension);
+		$this->setState('menu.extension', $extension);
 		$parts = explode('.', $extension);
 
 		// Extract the component name
-		$this->setState('category.component', $parts[0]);
+		$this->setState('menu.component', $parts[0]);
 
 		// Extract the optional section name
-		$this->setState('category.section', (count($parts) > 1) ? $parts[1] : null);
+		$this->setState('menu.section', (count($parts) > 1) ? $parts[1] : null);
 
 		// Load the parameters.
-		$params = JComponentHelper::getParams('com_categories');
+		$params = JComponentHelper::getParams('com_pmenu');
 		$this->setState('params', $params);
 	}
 
 	/**
-	 * Method to get a category.
+	 * Method to get a menu.
 	 *
 	 * @param   integer  $pk  An optional id of the object to get, otherwise the id from the model state is used.
 	 *
-	 * @return  mixed  Category data object on success, false on failure.
+	 * @return  mixed  Menu data object on success, false on failure.
 	 *
 	 * @since   1.6
 	 */
@@ -145,8 +145,8 @@ class CategoriesModelCategory extends JModelAdmin
 			// Prime required properties.
 			if (empty($result->id))
 			{
-				$result->parent_id = $this->getState('category.parent_id');
-				$result->extension = $this->getState('category.extension');
+				$result->parent_id = $this->getState('menu.parent_id');
+				$result->extension = $this->getState('menu.extension');
 			}
 
 			// Convert the metadata field to an array.
@@ -183,7 +183,7 @@ class CategoriesModelCategory extends JModelAdmin
 			{
 				$db = JFactory::getDbo();
 				$result->tags = new JHelperTags;
-				$result->tags->getTagIds($result->id, $result->extension . '.category');
+				$result->tags->getTagIds($result->id, $result->extension . '.menu');
 				$result->metadata['tags'] = $result->tags;
 			}
 		}
@@ -194,7 +194,7 @@ class CategoriesModelCategory extends JModelAdmin
 		{
 			if ($result->id != null)
 			{
-				$result->associations = CategoriesHelper::getAssociations($result->id, $result->extension);
+				$result->associations = PMenuHelper::getAssociations($result->id, $result->extension);
 				JArrayHelper::toInteger($result->associations);
 			}
 			else
@@ -218,7 +218,7 @@ class CategoriesModelCategory extends JModelAdmin
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
-		$extension = $this->getState('category.extension');
+		$extension = $this->getState('menu.extension');
 		$jinput = JFactory::getApplication()->input;
 
 		// A workaround to get the extension into the model for save requests.
@@ -228,13 +228,13 @@ class CategoriesModelCategory extends JModelAdmin
 			$extension = $data['extension'];
 			$parts = explode('.', $extension);
 
-			$this->setState('category.extension', $extension);
-			$this->setState('category.component', $parts[0]);
-			$this->setState('category.section', @$parts[1]);
+			$this->setState('menu.extension', $extension);
+			$this->setState('menu.component', $parts[0]);
+			$this->setState('menu.section', @$parts[1]);
 		}
 
 		// Get the form.
-		$form = $this->loadForm('com_categories.category' . $extension, 'category', array('control' => 'jform', 'load_data' => $loadData));
+		$form = $this->loadForm('com_pmenu.menu' . $extension, 'menu', array('control' => 'jform', 'load_data' => $loadData));
 		if (empty($form))
 		{
 			return false;
@@ -246,7 +246,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$data['extension'] = $extension;
 		}
 		$user = JFactory::getUser();
-		if (!$user->authorise('core.edit.state', $extension . '.category.' . $jinput->get('id')))
+		if (!$user->authorise('core.edit.state', $extension . '.menu.' . $jinput->get('id')))
 		{
 			// Disable fields for display.
 			$form->setFieldAttribute('ordering', 'disabled', 'true');
@@ -286,14 +286,14 @@ class CategoriesModelCategory extends JModelAdmin
 	protected function loadFormData()
 	{
 		// Check the session for previously entered form data.
-		$data = JFactory::getApplication()->getUserState('com_categories.edit.' . $this->getName() . '.data', array());
+		$data = JFactory::getApplication()->getUserState('com_pmenu.edit.' . $this->getName() . '.data', array());
 
 		if (empty($data))
 		{
 			$data = $this->getItem();
 		}
 
-		$this->preprocessData('com_categories.category', $data);
+		$this->preprocessData('com_pmenu.menu', $data);
 
 		return $data;
 	}
@@ -316,12 +316,12 @@ class CategoriesModelCategory extends JModelAdmin
 		jimport('joomla.filesystem.path');
 
 		$lang = JFactory::getLanguage();
-		$extension = $this->getState('category.extension');
-		$component = $this->getState('category.component');
-		$section = $this->getState('category.section');
+		$extension = $this->getState('menu.extension');
+		$component = $this->getState('menu.component');
+		$section = $this->getState('menu.section');
 
 		// Get the component form if it exists
-		$name = 'category' . ($section ? ('.' . $section) : '');
+		$name = 'menu' . ($section ? ('.' . $section) : '');
 
 		// Looking first in the component models/forms folder
 		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/models/forms/$name.xml");
@@ -347,12 +347,12 @@ class CategoriesModelCategory extends JModelAdmin
 
 		// Try to find the component helper.
 		$eName = str_replace('com_', '', $component);
-		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/helpers/category.php");
+		$path = JPath::clean(JPATH_ADMINISTRATOR . "/components/$component/helpers/menu.php");
 
 		if (file_exists($path))
 		{
 			require_once $path;
-			$cName = ucfirst($eName) . ucfirst($section) . 'HelperCategory';
+			$cName = ucfirst($eName) . ucfirst($section) . 'HelperMenu';
 
 			if (class_exists($cName) && is_callable(array($cName, 'onPrepareForm')))
 			{
@@ -372,7 +372,7 @@ class CategoriesModelCategory extends JModelAdmin
 		$form->setFieldAttribute('rules', 'component', $component);
 		$form->setFieldAttribute('rules', 'section', $name);
 
-		// Association category items
+		// Association menu items
 		$app = JFactory::getApplication();
 		$assoc = $this->getAssoc();
 		if ($assoc)
@@ -387,7 +387,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$fields->addAttribute('name', 'associations');
 			$fieldset = $fields->addChild('fieldset');
 			$fieldset->addAttribute('name', 'item_associations');
-			$fieldset->addAttribute('description', 'COM_CATEGORIES_ITEM_ASSOCIATIONS_FIELDSET_DESC');
+			$fieldset->addAttribute('description', 'COM_PMENU_ITEM_ASSOCIATIONS_FIELDSET_DESC');
 			$add = false;
 			foreach ($languages as $tag => $language)
 			{
@@ -396,11 +396,11 @@ class CategoriesModelCategory extends JModelAdmin
 					$add = true;
 					$field = $fieldset->addChild('field');
 					$field->addAttribute('name', $tag);
-					$field->addAttribute('type', 'categoryedit');
+					$field->addAttribute('type', 'menuedit');
 					$field->addAttribute('language', $tag);
 					$field->addAttribute('label', $language->title);
 					$field->addAttribute('translate_label', 'false');
-					$option = $field->addChild('option', 'COM_CATEGORIES_ITEM_FIELD_ASSOCIATION_NO_VALUE');
+					$option = $field->addChild('option', 'COM_PMENU_ITEM_FIELD_ASSOCIATION_NO_VALUE');
 					$option->addAttribute('value', '');
 				}
 			}
@@ -434,7 +434,7 @@ class CategoriesModelCategory extends JModelAdmin
 		// Include the content plugins for the on save events.
 		JPluginHelper::importPlugin('content');
 
-		// Load the row if saving an existing category.
+		// Load the row if saving an existing menu.
 		if ($pk > 0)
 		{
 			$table->load($pk);
@@ -513,7 +513,7 @@ class CategoriesModelCategory extends JModelAdmin
 
 			if ($all_language && !empty($associations))
 			{
-				JError::raiseNotice(403, JText::_('COM_CATEGORIES_ERROR_ALL_LANGUAGE_ASSOCIATED'));
+				JError::raiseNotice(403, JText::_('COM_PMENU_ERROR_ALL_LANGUAGE_ASSOCIATED'));
 			}
 
 			$associations[$table->language] = $table->id;
@@ -522,7 +522,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true)
 				->delete('#__associations')
-				->where($db->quoteName('context') . ' = ' . $db->quote('com_categories.item'))
+				->where($db->quoteName('context') . ' = ' . $db->quote('com_pmenu.item'))
 				->where($db->quoteName('id') . ' IN (' . implode(',', $associations) . ')');
 			$db->setQuery($query);
 			$db->execute();
@@ -542,7 +542,7 @@ class CategoriesModelCategory extends JModelAdmin
 
 				foreach ($associations as $tag => $id)
 				{
-					$query->values($id . ',' . $db->quote('com_categories.item') . ',' . $db->quote($key));
+					$query->values($id . ',' . $db->quote('com_pmenu.item') . ',' . $db->quote($key));
 				}
 
 				$db->setQuery($query);
@@ -559,14 +559,14 @@ class CategoriesModelCategory extends JModelAdmin
 		// Trigger the onContentAfterSave event.
 		$dispatcher->trigger($this->event_after_save, array($this->option . '.' . $this->name, &$table, $isNew));
 
-		// Rebuild the path for the category:
+		// Rebuild the path for the menu:
 		if (!$table->rebuildPath($table->id))
 		{
 			$this->setError($table->getError());
 			return false;
 		}
 
-		// Rebuild the paths of the category's children:
+		// Rebuild the paths of the menu's children:
 		if (!$table->rebuild($table->id, $table->lft, $table->level, $table->path))
 		{
 			$this->setError($table->getError());
@@ -598,7 +598,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$dispatcher = JEventDispatcher::getInstance();
 			$extension = JFactory::getApplication()->input->get('extension');
 
-			// Include the content plugins for the change of category state event.
+			// Include the content plugins for the change of menu state event.
 			JPluginHelper::importPlugin('content');
 
 			// Trigger the onCategoryChangeState event.
@@ -662,9 +662,9 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
-	 * Batch copy categories to a new category.
+	 * Batch copy menus to a new menu.
 	 *
-	 * @param   integer  $value     The new category.
+	 * @param   integer  $value     The new menu.
 	 * @param   array    $pks       An array of row IDs.
 	 * @param   array    $contexts  An array of item contexts.
 	 *
@@ -702,12 +702,12 @@ class CategoriesModelCategory extends JModelAdmin
 					$parentId = 0;
 				}
 			}
-			// Check that user has create permission for parent category
-			$canCreate = ($parentId == $table->getRootId()) ? $user->authorise('core.create', $extension) : $user->authorise('core.create', $extension . '.category.' . $parentId);
+			// Check that user has create permission for parent menu
+			$canCreate = ($parentId == $table->getRootId()) ? $user->authorise('core.create', $extension) : $user->authorise('core.create', $extension . '.menu.' . $parentId);
 			if (!$canCreate)
 			{
-				// Error since user cannot create in parent category
-				$this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_CREATE'));
+				// Error since user cannot create in parent menu
+				$this->setError(JText::_('COM_PMENU_BATCH_CANNOT_CREATE'));
 				return false;
 			}
 		}
@@ -723,7 +723,7 @@ class CategoriesModelCategory extends JModelAdmin
 			// Make sure we can create in root
 			elseif (!$user->authorise('core.create', $extension))
 			{
-				$this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_CREATE'));
+				$this->setError(JText::_('COM_PMENU_BATCH_CANNOT_CREATE'));
 				return false;
 			}
 		}
@@ -734,7 +734,7 @@ class CategoriesModelCategory extends JModelAdmin
 		// Calculate the emergency stop count as a precaution against a runaway loop bug
 		$query = $db->getQuery(true)
 			->select('COUNT(id)')
-			->from($db->quoteName('#__categories'));
+			->from($db->quoteName('#__pmenu_menus'));
 		$db->setQuery($query);
 
 		try
@@ -775,7 +775,7 @@ class CategoriesModelCategory extends JModelAdmin
 			// Copy is a bit tricky, because we also need to copy the children
 			$query->clear()
 				->select('id')
-				->from($db->quoteName('#__categories'))
+				->from($db->quoteName('#__pmenu_menus'))
 				->where('lft > ' . (int) $table->lft)
 				->where('rgt < ' . (int) $table->rgt);
 			$db->setQuery($query);
@@ -853,9 +853,9 @@ class CategoriesModelCategory extends JModelAdmin
 	}
 
 	/**
-	 * Batch move categories to a new category.
+	 * Batch move menus to a new menu.
 	 *
-	 * @param   integer  $value     The new category ID.
+	 * @param   integer  $value     The new menu ID.
 	 * @param   array    $pks       An array of row IDs.
 	 * @param   array    $contexts  An array of item contexts.
 	 *
@@ -892,29 +892,29 @@ class CategoriesModelCategory extends JModelAdmin
 					$parentId = 0;
 				}
 			}
-			// Check that user has create permission for parent category
-			$canCreate = ($parentId == $table->getRootId()) ? $user->authorise('core.create', $extension) : $user->authorise('core.create', $extension . '.category.' . $parentId);
+			// Check that user has create permission for parent menu
+			$canCreate = ($parentId == $table->getRootId()) ? $user->authorise('core.create', $extension) : $user->authorise('core.create', $extension . '.menu.' . $parentId);
 			if (!$canCreate)
 			{
-				// Error since user cannot create in parent category
-				$this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_CREATE'));
+				// Error since user cannot create in parent menu
+				$this->setError(JText::_('COM_PMENU_BATCH_CANNOT_CREATE'));
 				return false;
 			}
 
-			// Check that user has edit permission for every category being moved
-			// Note that the entire batch operation fails if any category lacks edit permission
+			// Check that user has edit permission for every menu being moved
+			// Note that the entire batch operation fails if any menu lacks edit permission
 			foreach ($pks as $pk)
 			{
-				if (!$user->authorise('core.edit', $extension . '.category.' . $pk))
+				if (!$user->authorise('core.edit', $extension . '.menu.' . $pk))
 				{
-					// Error since user cannot edit this category
-					$this->setError(JText::_('COM_CATEGORIES_BATCH_CANNOT_EDIT'));
+					// Error since user cannot edit this menu
+					$this->setError(JText::_('COM_PMENU_BATCH_CANNOT_EDIT'));
 					return false;
 				}
 			}
 		}
 
-		// We are going to store all the children and just move the category
+		// We are going to store all the children and just move the menu
 		$children = array();
 
 		// Parent exists so we let's proceed
@@ -946,7 +946,7 @@ class CategoriesModelCategory extends JModelAdmin
 				// Add the child node ids to the children array.
 				$query->clear()
 					->select('id')
-					->from($db->quoteName('#__categories'))
+					->from($db->quoteName('#__pmenu_menus'))
 					->where($db->quoteName('lft') . ' BETWEEN ' . (int) $table->lft . ' AND ' . (int) $table->rgt);
 				$db->setQuery($query);
 
@@ -1000,8 +1000,8 @@ class CategoriesModelCategory extends JModelAdmin
 			case 'com_content':
 				parent::cleanCache('com_content');
 				parent::cleanCache('mod_articles_archive');
-				parent::cleanCache('mod_articles_categories');
-				parent::cleanCache('mod_articles_category');
+				parent::cleanCache('mod_articles_menus');
+				parent::cleanCache('mod_articles_menu');
 				parent::cleanCache('mod_articles_latest');
 				parent::cleanCache('mod_articles_news');
 				parent::cleanCache('mod_articles_popular');
@@ -1046,7 +1046,7 @@ class CategoriesModelCategory extends JModelAdmin
 		}
 
 		$app = JFactory::getApplication();
-		$extension = $this->getState('category.extension');
+		$extension = $this->getState('menu.extension');
 
 		$assoc = isset($app->item_associations) ? $app->item_associations : 0;
 		$extension = explode('.', $extension);
@@ -1062,7 +1062,7 @@ class CategoriesModelCategory extends JModelAdmin
 			$hname = $cname . 'HelperAssociation';
 			JLoader::register($hname, JPATH_SITE . '/components/' . $component . '/helpers/association.php');
 
-			$assoc = class_exists($hname) && !empty($hname::$category_association);
+			$assoc = class_exists($hname) && !empty($hname::$menu_association);
 		}
 
 		return $assoc;

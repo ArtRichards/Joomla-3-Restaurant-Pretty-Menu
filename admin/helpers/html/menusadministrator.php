@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -9,29 +9,29 @@
 
 defined('_JEXEC') or die;
 
-JLoader::register('CategoriesHelper', JPATH_ADMINISTRATOR . '/components/com_categories/helpers/categories.php');
+JLoader::register('PMenuHelper', JPATH_ADMINISTRATOR . '/components/com_pmenu/helpers/menus.php');
 
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  */
-abstract class JHtmlCategoriesAdministrator
+abstract class JHtmlPMenuAdministrator
 {
 	/**
-	 * @param   int $catid	The category item id
+	 * @param   int $catid	The menu item id
 	 */
 	public static function association($catid, $extension = 'com_content')
 	{
 		// Get the associations
-		$associations = CategoriesHelper::getAssociations($catid, $extension);
+		$associations = PMenuHelper::getAssociations($catid, $extension);
 
 		JArrayHelper::toInteger($associations);
 
-		// Get the associated categories
+		// Get the associated menus
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('c.*')
-			->from('#__categories as c')
+			->from('#__menus as c')
 			->where('c.id IN ('.implode(',', array_values($associations)).')')
 			->join('LEFT', '#__languages as l ON c.language=l.lang_code')
 			->select('l.image')
@@ -52,10 +52,10 @@ abstract class JHtmlCategoriesAdministrator
 		{
 			if ($associated != $catid)
 			{
-				$text[] = JText::sprintf('COM_CATEGORIES_TIP_ASSOCIATED_LANGUAGE', JHtml::_('image', 'mod_languages/'.$items[$associated]->image.'.gif', $items[$associated]->language_title, array('title' => $items[$associated]->language_title), true), $items[$associated]->title);
+				$text[] = JText::sprintf('COM_PMENU_TIP_ASSOCIATED_LANGUAGE', JHtml::_('image', 'mod_languages/'.$items[$associated]->image.'.gif', $items[$associated]->language_title, array('title' => $items[$associated]->language_title), true), $items[$associated]->title);
 			}
 		}
-		return JHtml::_('tooltip', implode('<br />', $text), JText::_('COM_CATEGORIES_TIP_ASSOCIATION'), 'admin/icon-16-links.png');
+		return JHtml::_('tooltip', implode('<br />', $text), JText::_('COM_PMENU_TIP_ASSOCIATION'), 'admin/icon-16-links.png');
 	}
 
 }

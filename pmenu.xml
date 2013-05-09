@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="component" version="0.0.2" method="upgrade">
+<extension type="component" version="0.0.3" method="upgrade">
 	<name>COM_PMENU</name>
 	<creationDate>2013-04-02</creationDate>
 	<author>ArtRichards</author>
@@ -7,14 +7,20 @@
 	<authorUrl>http://TxDev.net</authorUrl>
 	<copyright>Copyright Info</copyright>
 	<license>License Info</license>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 	<description>COM_PMENU_DESCRIPTION</description>
 
-	<install>
-  		<sql>
-    		<file charset="utf8" driver="mysql">install.mysql.sql</file>
-  		</sql>
-	</install>
+
+        <scriptfile>script.php</scriptfile>
+ 
+        <install>  
+                <sql>
+                        <file driver="mysql" charset="utf8">sql/install.mysql.sql</file>
+                </sql>
+        </install>
+        
+        
+        
 
 	<files folder="site">
 		<folder>assets</folder>
@@ -28,8 +34,6 @@
 		<filename>router.php</filename>
 	</files> 
 
-	<scriptfile>install.php</scriptfile>
-
 	<languages folder="site">
 		<language tag="en-GB">languages/en-GB/en-GB.com_pmenu.ini</language>
 	</languages>
@@ -37,8 +41,8 @@
 	<administration>
 		<menu link="option=com_pmenu" img="components/com_pmenu/assets/images/pmenu_icon.png">COM_PMENU</menu>
 		<submenu>
-			<menu view="statistics" img="components/com_pmenu/assets/images/settings_icon.png" 
-				alt="PMENU/Statistics">COM_PMENU_STATISTICS</menu>
+			<menu view="menus" img="components/com_pmenu/assets/images/settings_icon.png" 
+				alt="PMENU/default">COM_PMENU_DEFAULT</menu>
 		</submenu>
 
 		<files folder="admin">
@@ -46,17 +50,33 @@
 			<folder>languages</folder>
 			<folder>helpers</folder>
 			<folder>models</folder>
+			<folder>tables</folder>
 			<folder>views</folder>
+			<folder>sql</folder>
 			<filename>pmenu.php</filename>
-			<filename>index.html</filename>
-			<filename>install.mysql.sql</filename>
+                        <filename>access.xml</filename>
+                        <filename>config.xml</filename>
+                        <filename>controller.php</filename>
 		</files>  
 
 		<languages folder="admin">
 			<language tag="en-GB">languages/en-GB/en-GB.com_pmenu.ini</language>
 			<language tag="en-GB">languages/en-GB/en-GB.com_pmenu.sys.ini</language>
 		</languages>
+                
 
 	</administration>
+        
+
+<!--                                    <uninstall>  
+                                            <sql>
+                                                    <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+                                            </sql>
+                                    </uninstall>
+                                    <update>  
+                                            <schemas>
+                                                    <schemapath type="mysql">sql/updates/mysql</schemapath>
+                                            </schemas>
+                                    </update>    -->
 	
 </extension>

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -26,7 +26,7 @@ JHtml::_('formbehavior.chosen', 'select');
 <script type="text/javascript">
 	Joomla.submitbutton = function(task)
 	{
-		if (task == 'category.cancel' || document.formvalidator.isValid(document.id('item-form')))
+		if (task == 'menu.cancel' || document.formvalidator.isValid(document.id('item-form')))
 		{
 			<?php echo $this->form->getField('description')->save(); ?>
 			Joomla.submitform(task, document.getElementById('item-form'));
@@ -34,13 +34,13 @@ JHtml::_('formbehavior.chosen', 'select');
 	}
 </script>
 
-<form action="<?php echo JRoute::_('index.php?option=com_categories&extension=' . $input->getCmd('extension', 'com_content') . '&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
+<form action="<?php echo JRoute::_('index.php?option=com_pmenu&extension=' . $input->getCmd('extension', 'com_content') . '&layout=edit&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
 	<div class="row-fluid">
 	<!-- Begin Content -->
 		<div class="span10 form-horizontal">
 			<?php echo JHtml::_('bootstrap.startTabSet', 'myTab', array('active' => 'general')); ?>
 
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_CATEGORIES_FIELDSET_DETAILS', true)); ?>
+				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'general', JText::_('COM_PMENU_FIELDSET_DETAILS', true)); ?>
 					<div class="control-group">
 						<div class="control-label">
 							<?php echo $this->form->getLabel('title'); ?>
@@ -75,7 +75,7 @@ JHtml::_('formbehavior.chosen', 'select');
 					</div>
 				<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('COM_CATEGORIES_FIELDSET_PUBLISHING', true)); ?>
+				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'publishing', JText::_('COM_PMENU_FIELDSET_PUBLISHING', true)); ?>
 					<div class="control-group">
 						<div class="control-label">
 							<?php echo $this->form->getLabel('id'); ?>
@@ -130,7 +130,7 @@ JHtml::_('formbehavior.chosen', 'select');
 					<?php endif; ?>
 				<?php echo JHtml::_('bootstrap.endTab'); ?>
 
-				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('CATEGORIES_FIELDSET_OPTIONS', true)); ?>
+				<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'options', JText::_('MENU_FIELDSET_OPTIONS', true)); ?>
 					<fieldset>
 						<?php echo $this->loadTemplate('options'); ?>
 					</fieldset>
@@ -153,7 +153,7 @@ JHtml::_('formbehavior.chosen', 'select');
 				<?php endif; ?>
 
 				<?php if ($this->canDo->get('core.admin')) : ?>
-					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'rules', JText::_('COM_CATEGORIES_FIELDSET_RULES', true)); ?>
+					<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'rules', JText::_('COM_PMENU_FIELDSET_RULES', true)); ?>
 						<fieldset>
 							<?php echo $this->form->getInput('rules'); ?>
 						</fieldset>

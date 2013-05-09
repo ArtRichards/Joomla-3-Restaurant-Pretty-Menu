@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,13 +10,13 @@
 defined('_JEXEC') or die;
 
 /**
- * HTML View class for the Categories component
+ * HTML View class for the PMenu component
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesViewCategory extends JViewLegacy
+class PMenuViewMenu extends JViewLegacy
 {
 	protected $form;
 
@@ -34,7 +34,7 @@ class CategoriesViewCategory extends JViewLegacy
 		$this->form  = $this->get('Form');
 		$this->item  = $this->get('Item');
 		$this->state = $this->get('State');
-		$this->canDo = CategoriesHelper::getActions($this->state->get('category.component'));
+		$this->canDo = PMenuHelper::getActions($this->state->get('menu.component'));
 		$this->assoc = $this->get('Assoc');
 
 		$input = JFactory::getApplication()->input;
@@ -67,7 +67,7 @@ class CategoriesViewCategory extends JViewLegacy
 		$checkedOut	= !($this->item->checked_out == 0 || $this->item->checked_out == $userId);
 
 		// Avoid nonsense situation.
-		if ($extension == 'com_categories')
+		if ($extension == 'com_pmenu')
 		{
 			return;
 		}
@@ -84,13 +84,13 @@ class CategoriesViewCategory extends JViewLegacy
 		||	$lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
 		||	$lang->load($component, JPATH_ADMINISTRATOR.'/components/'.$component, $lang->getDefault(), false, false);
 
-		// Load the category helper.
-		require_once JPATH_COMPONENT.'/helpers/categories.php';
+		// Load the menu helper.
+		require_once JPATH_COMPONENT.'/helpers/menus.php';
 
 		// Get the results for each action.
-		$canDo = CategoriesHelper::getActions($component, $this->item->id);
+		$canDo = PMenuHelper::getActions($component, $this->item->id);
 
-		// If a component categories title string is present, let's use it.
+		// If a component menus title string is present, let's use it.
 		if ($lang->hasKey($component_title_key = $component.($section?"_$section":'').'_CATEGORY_'.($isNew?'ADD':'EDIT').'_TITLE'))
 		{
 			$title = JText::_($component_title_key);
@@ -98,51 +98,51 @@ class CategoriesViewCategory extends JViewLegacy
 		// Else if the component section string exits, let's use it
 		elseif ($lang->hasKey($component_section_key = $component.($section?"_$section":'')))
 		{
-			$title = JText::sprintf('COM_CATEGORIES_CATEGORY_'.($isNew?'ADD':'EDIT').'_TITLE', $this->escape(JText::_($component_section_key)));
+			$title = JText::sprintf('COM_PMENU_CATEGORY_'.($isNew?'ADD':'EDIT').'_TITLE', $this->escape(JText::_($component_section_key)));
 		}
 		// Else use the base title
 		else {
-			$title = JText::_('COM_CATEGORIES_CATEGORY_BASE_'.($isNew?'ADD':'EDIT').'_TITLE');
+			$title = JText::_('COM_PMENU_CATEGORY_BASE_'.($isNew?'ADD':'EDIT').'_TITLE');
 		}
 
 		// Load specific css component
-		JHtml::_('stylesheet', $component.'/administrator/categories.css', array(), true);
+		JHtml::_('stylesheet', $component.'/administrator/menus.css', array(), true);
 
 		// Prepare the toolbar.
-		JToolbarHelper::title($title, 'category-'.($isNew?'add':'edit').' '.substr($component, 4).($section?"-$section":'').'-category-'.($isNew?'add':'edit'));
+		JToolbarHelper::title($title, 'menu-'.($isNew?'add':'edit').' '.substr($component, 4).($section?"-$section":'').'-menu-'.($isNew?'add':'edit'));
 
 		// For new records, check the create permission.
-		if ($isNew && (count($user->getAuthorisedCategories($component, 'core.create')) > 0))
+		if ($isNew && (count($user->getAuthorisedPMenu($component, 'core.create')) > 0))
 		{
-			JToolbarHelper::apply('category.apply');
-			JToolbarHelper::save('category.save');
-			JToolbarHelper::save2new('category.save2new');
+			JToolbarHelper::apply('menu.apply');
+			JToolbarHelper::save('menu.save');
+			JToolbarHelper::save2new('menu.save2new');
 		}
 
 		// If not checked out, can save the item.
 		elseif (!$checkedOut && ($canDo->get('core.edit') || ($canDo->get('core.edit.own') && $this->item->created_user_id == $userId)))
 		{
-			JToolbarHelper::apply('category.apply');
-			JToolbarHelper::save('category.save');
+			JToolbarHelper::apply('menu.apply');
+			JToolbarHelper::save('menu.save');
 			if ($canDo->get('core.create'))
 			{
-				JToolbarHelper::save2new('category.save2new');
+				JToolbarHelper::save2new('menu.save2new');
 			}
 		}
 
 		// If an existing item, can save to a copy.
 		if (!$isNew && $canDo->get('core.create'))
 		{
-			JToolbarHelper::save2copy('category.save2copy');
+			JToolbarHelper::save2copy('menu.save2copy');
 		}
 
 		if (empty($this->item->id))
 		{
-			JToolbarHelper::cancel('category.cancel');
+			JToolbarHelper::cancel('menu.cancel');
 		}
 		else
 		{
-			JToolbarHelper::cancel('category.cancel', 'JTOOLBAR_CLOSE');
+			JToolbarHelper::cancel('menu.cancel', 'JTOOLBAR_CLOSE');
 		}
 
 		JToolbarHelper::divider();
@@ -153,7 +153,7 @@ class CategoriesViewCategory extends JViewLegacy
 			$ref_key = 'JHELP_COMPONENTS_'.strtoupper(substr($component, 4).($section?"_$section":'')).'_CATEGORY_'.($isNew?'ADD':'EDIT');
 		}
 
-		// Get help for the category/section view for the component by
+		// Get help for the menu/section view for the component by
 		// -remotely searching in a language defined dedicated URL: *component*_HELP_URL
 		// -locally  searching in a component help file if helpURL param exists in the component and is set to ''
 		// -remotely searching in a component URL if helpURL param exists in the component and is NOT set to ''

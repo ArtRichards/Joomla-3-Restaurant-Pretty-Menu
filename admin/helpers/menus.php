@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -10,19 +10,19 @@
 defined('_JEXEC') or die;
 
 /**
- * Categories helper.
+ * PMenu helper.
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class CategoriesHelper
+class PMenuHelper
 {
 
 	/**
 	 * Configure the Submenu links.
 	 *
-	 * @param   string    The extension being used for the categories.
+	 * @param   string    The extension being used for the menus.
 	 *
 	 * @return  void
 	 * @since   1.6
@@ -30,7 +30,7 @@ class CategoriesHelper
 	public static function addSubmenu($extension)
 	{
 		// Avoid nonsense situation.
-		if ($extension == 'com_categories')
+		if ($extension == 'com_pmenu')
 		{
 			return;
 		}
@@ -67,7 +67,7 @@ class CategoriesHelper
 						|| $lang->load($component, JPATH_BASE, $lang->getDefault(), false, false)
 						|| $lang->load($component, JPath::clean(JPATH_ADMINISTRATOR . '/components/' . $component), $lang->getDefault(), false, false);
 
-					call_user_func(array($cName, 'addSubmenu'), 'categories' . (isset($section) ? '.' . $section : ''));
+					call_user_func(array($cName, 'addSubmenu'), 'menus' . (isset($section) ? '.' . $section : ''));
 				}
 			}
 		}
@@ -77,27 +77,27 @@ class CategoriesHelper
 	 * Gets a list of the actions that can be performed.
 	 *
 	 * @param   string    $extension     The extension.
-	 * @param   integer   $categoryId    The category ID.
+	 * @param   integer   $menuId    The menu ID.
 	 *
 	 * @return  JObject
 	 * @since   1.6
 	 */
-	public static function getActions($extension, $categoryId = 0)
+	public static function getActions($extension, $menuId = 0)
 	{
 		$user = JFactory::getUser();
 		$result = new JObject;
 		$parts = explode('.', $extension);
 		$component = $parts[0];
 
-		if (empty($categoryId))
+		if (empty($menuId))
 		{
 			$assetName = $component;
 			$level = 'component';
 		}
 		else
 		{
-			$assetName = $component . '.category.' . (int) $categoryId;
-			$level = 'category';
+			$assetName = $component . '.menu.' . (int) $menuId;
+			$level = 'menu';
 		}
 
 		$actions = JAccess::getActions($component, $level);
@@ -115,10 +115,10 @@ class CategoriesHelper
 		$associations = array();
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
-			->from('#__categories as c')
-			->join('INNER', '#__associations as a ON a.id = c.id AND a.context=' . $db->quote('com_categories.item'))
+			->from('#__menus as c')
+			->join('INNER', '#__associations as a ON a.id = c.id AND a.context=' . $db->quote('com_pmenu.item'))
 			->join('INNER', '#__associations as a2 ON a.key = a2.key')
-			->join('INNER', '#__categories as c2 ON a2.id = c2.id AND c2.extension = ' . $db->quote($extension))
+			->join('INNER', '#__menus as c2 ON a2.id = c2.id AND c2.extension = ' . $db->quote($extension))
 			->where('c.id =' . (int) $pk)
 			->where('c.extension = ' . $db->quote($extension));
 		$select = array(

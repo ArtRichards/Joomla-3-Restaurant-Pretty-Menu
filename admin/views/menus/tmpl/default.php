@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -25,8 +25,8 @@ $ordering 	= ($listOrder == 'a.lft');
 $saveOrder 	= ($listOrder == 'a.lft' && $listDirn == 'asc');
 if ($saveOrder)
 {
-	$saveOrderingUrl = 'index.php?option=com_categories&task=categories.saveOrderAjax&tmpl=component';
-	JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
+	$saveOrderingUrl = 'index.php?option=com_pmenu&task=menus.saveOrderAjax&tmpl=component';
+	JHtml::_('sortablelist.sortable', 'menuList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
 }
 $sortFields = $this->getSortFields();
 ?>
@@ -47,7 +47,7 @@ $sortFields = $this->getSortFields();
 		Joomla.tableOrdering(order, dirn, '');
 	}
 </script>
-<form action="<?php echo JRoute::_('index.php?option=com_categories&view=categories');?>" method="post" name="adminForm" id="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_pmenu&view=menus');?>" method="post" name="adminForm" id="adminForm">
 <?php if (!empty( $this->sidebar)) : ?>
 	<div id="j-sidebar-container" class="span2">
 		<?php echo $this->sidebar; ?>
@@ -58,8 +58,8 @@ $sortFields = $this->getSortFields();
 <?php endif;?>
 		<div id="filter-bar" class="btn-toolbar">
 			<div class="filter-search btn-group pull-left">
-				<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_CATEGORIES_ITEMS_SEARCH_FILTER');?></label>
-				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('COM_CATEGORIES_ITEMS_SEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_CATEGORIES_ITEMS_SEARCH_FILTER'); ?>" />
+				<label for="filter_search" class="element-invisible"><?php echo JText::_('COM_PMENU_ITEMS_SEARCH_FILTER');?></label>
+				<input type="text" name="filter_search" id="filter_search" placeholder="<?php echo JText::_('COM_PMENU_ITEMS_SEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_PMENU_ITEMS_SEARCH_FILTER'); ?>" />
 			</div>
 			<div class="btn-group hidden-phone">
 				<button class="btn tip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
@@ -87,7 +87,7 @@ $sortFields = $this->getSortFields();
 			<div class="clearfix"></div>
 		</div>
 
-		<table class="table table-striped" id="categoryList">
+		<table class="table table-striped" id="menuList">
 			<thead>
 				<tr>
 					<th width="1%" class="nowrap center hidden-phone">
@@ -130,10 +130,10 @@ $sortFields = $this->getSortFields();
 				$originalOrders = array();
 				foreach ($this->items as $i => $item) :
 					$orderkey   = array_search($item->id, $this->ordering[$item->parent_id]);
-					$canEdit    = $user->authorise('core.edit',       $extension . '.category.' . $item->id);
+					$canEdit    = $user->authorise('core.edit',       $extension . '.menu.' . $item->id);
 					$canCheckin = $user->authorise('core.admin',      'com_checkin') || $item->checked_out == $userId || $item->checked_out == 0;
-					$canEditOwn = $user->authorise('core.edit.own',   $extension . '.category.' . $item->id) && $item->created_user_id == $userId;
-					$canChange  = $user->authorise('core.edit.state', $extension . '.category.' . $item->id) && $canCheckin;
+					$canEditOwn = $user->authorise('core.edit.own',   $extension . '.menu.' . $item->id) && $item->created_user_id == $userId;
+					$canChange  = $user->authorise('core.edit.state', $extension . '.menu.' . $item->id) && $canCheckin;
 
 					// Get the parents of item for sorting
 					if ($item->level > 1)
@@ -185,15 +185,15 @@ $sortFields = $this->getSortFields();
 						<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 					</td>
 					<td class="center">
-						<?php echo JHtml::_('jgrid.published', $item->published, $i, 'categories.', $canChange);?>
+						<?php echo JHtml::_('jgrid.published', $item->published, $i, 'menus.', $canChange);?>
 					</td>
 					<td>
 						<?php echo str_repeat('<span class="gi">&mdash;</span>', $item->level - 1) ?>
 						<?php if ($item->checked_out) : ?>
-							<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'categories.', $canCheckin); ?>
+							<?php echo JHtml::_('jgrid.checkedout', $i, $item->editor, $item->checked_out_time, 'menus.', $canCheckin); ?>
 						<?php endif; ?>
 						<?php if ($canEdit || $canEditOwn) : ?>
-							<a href="<?php echo JRoute::_('index.php?option=com_categories&task=category.edit&id='.$item->id.'&extension='.$extension);?>">
+							<a href="<?php echo JRoute::_('index.php?option=com_pmenu&task=menu.edit&id='.$item->id.'&extension='.$extension);?>">
 								<?php echo $this->escape($item->title); ?></a>
 						<?php else : ?>
 							<?php echo $this->escape($item->title); ?>
@@ -212,7 +212,7 @@ $sortFields = $this->getSortFields();
 				<?php if ($this->assoc) : ?>
 				<td class="center hidden-phone">
 					<?php if ($item->association):?>
-						<?php echo JHtml::_('CategoriesAdministrator.association', $item->id, $extension); ?>
+						<?php echo JHtml::_('PMenuAdministrator.association', $item->id, $extension); ?>
 					<?php endif;?>
 				</td>
 				<?php endif;?>

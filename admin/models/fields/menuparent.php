@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -15,10 +15,10 @@ JFormHelper::loadFieldClass('list');
  * Form Field class for the Joomla Framework.
  *
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  * @since       1.6
  */
-class JFormFieldCategoryParent extends JFormFieldList
+class JFormFieldMenuParent extends JFormFieldList
 {
 	/**
 	 * The form field type.
@@ -26,7 +26,7 @@ class JFormFieldCategoryParent extends JFormFieldList
 	 * @var        string
 	 * @since   1.6
 	 */
-	protected $type = 'CategoryParent';
+	protected $type = 'MenuParent';
 //Get the list of objects which we can become subobjects of
 	/**
 	 * Method to get the field options.
@@ -41,16 +41,16 @@ class JFormFieldCategoryParent extends JFormFieldList
 		$options = array();
 		$name = (string) $this->element['name'];
 
-		// Let's get the id for the current item, either category or content item.
+		// Let's get the id for the current item, either menu or content item.
 		$jinput = JFactory::getApplication()->input;
-		// For categories the old category is the category id 0 for new category.
+		// For menus the old menu is the menu id 0 for new menu.
 		if ($this->element['parent'])
 		{
 			$oldCat = $jinput->get('id', 0);
 			$oldParent = $this->form->getValue($name);
 		}
 		else
-			// For items the old category is the category they are in when opened or 0 if new.
+			// For items the old menu is the menu they are in when opened or 0 if new.
 		{
 			$thisItem = $jinput->get('id', 0);
 			$oldCat = $this->form->getValue($name);
@@ -60,8 +60,8 @@ class JFormFieldCategoryParent extends JFormFieldList
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('a.id AS value, a.title AS text, a.level')
-			->from('#__categories AS a')
-			->join('LEFT', $db->quoteName('#__categories') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
+			->from('#__menus AS a')
+			->join('LEFT', $db->quoteName('#__menus') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
 
 		// Filter by the type
 		if ($extension = $this->form->getValue('extension'))
@@ -73,12 +73,12 @@ class JFormFieldCategoryParent extends JFormFieldList
 			// Prevent parenting to children of this item.
 			if ($id = $this->form->getValue('id'))
 			{
-				$query->join('LEFT', $db->quoteName('#__categories') . ' AS p ON p.id = ' . (int) $id)
+				$query->join('LEFT', $db->quoteName('#__menus') . ' AS p ON p.id = ' . (int) $id)
 					->where('NOT(a.lft >= p.lft AND a.rgt <= p.rgt)');
 
 				$rowQuery = $db->getQuery(true);
 				$rowQuery->select('a.id AS value, a.title AS text, a.level, a.parent_id')
-					->from('#__categories AS a')
+					->from('#__menus AS a')
 					->where('a.id = ' . (int) $id);
 				$db->setQuery($rowQuery);
 				$row = $db->loadObject();
@@ -115,30 +115,30 @@ class JFormFieldCategoryParent extends JFormFieldList
 		// Get the current user object.
 		$user = JFactory::getUser();
 
-		// For new items we want a list of categories you are allowed to create in.
+		// For new items we want a list of menus you are allowed to create in.
 		if ($oldCat == 0)
 		{
 			foreach ($options as $i => $option)
 			{
-				// To take save or create in a category you need to have create rights for that category
-				// unless the item is already in that category.
-				// Unset the option if the user isn't authorised for it. In this field assets are always categories.
-				if ($user->authorise('core.create', $extension . '.category.' . $option->value) != true)
+				// To take save or create in a menu you need to have create rights for that menu
+				// unless the item is already in that menu.
+				// Unset the option if the user isn't authorised for it. In this field assets are always menus.
+				if ($user->authorise('core.create', $extension . '.menu.' . $option->value) != true)
 				{
 					unset($options[$i]);
 				}
 			}
 		}
-		// If you have an existing category id things are more complex.
+		// If you have an existing menu id things are more complex.
 		else
 		{
-			//$categoryOld = $this->form->getValue($name);
+			//$menuOld = $this->form->getValue($name);
 			foreach ($options as $i => $option)
 			{
-				// If you are only allowed to edit in this category but not edit.state, you should not get any
-				// option to change the category parent for a category or the category for a content item,
-				// but you should be able to save in that category.
-				if ($user->authorise('core.edit.state', $extension . '.category.' . $oldCat) != true)
+				// If you are only allowed to edit in this menu but not edit.state, you should not get any
+				// option to change the menu parent for a menu or the menu for a content item,
+				// but you should be able to save in that menu.
+				if ($user->authorise('core.edit.state', $extension . '.menu.' . $oldCat) != true)
 				{
 					if ($option->value != $oldCat)
 					{
@@ -146,10 +146,10 @@ class JFormFieldCategoryParent extends JFormFieldList
 						unset($options[$i]);
 					}
 				}
-				// However, if you can edit.state you can also move this to another category for which you have
-				// create permission and you should also still be able to save in the current category.
+				// However, if you can edit.state you can also move this to another menu for which you have
+				// create permission and you should also still be able to save in the current menu.
 				elseif
-				(($user->authorise('core.create', $extension . '.category.' . $option->value) != true)
+				(($user->authorise('core.create', $extension . '.menu.' . $option->value) != true)
 					&& $option->value != $oldCat
 				)
 				{

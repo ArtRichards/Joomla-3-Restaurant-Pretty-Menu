@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     Joomla.Administrator
- * @subpackage  com_categories
+ * @subpackage  com_pmenu
  *
  * @copyright   Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 <?php  $fieldSets = $this->form->getFieldsets('attribs'); ?>
 	<?php foreach ($fieldSets as $name => $fieldSet) : ?>
-		<?php $label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_CATEGORIES_'.$name.'_FIELDSET_LABEL'; ?>
+		<?php $label = !empty($fieldSet->label) ? $fieldSet->label : 'COM_PMENU_'.$name.'_FIELDSET_LABEL'; ?>
 		<?php if ($name != 'editorConfig' && $name != 'basic-limited') : ?>
 			<?php echo JHtml::_('bootstrap.addTab', 'myTab', 'attrib-'.$name, trim($label)); ?>
 			<fieldset>
